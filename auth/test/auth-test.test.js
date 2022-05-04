@@ -23,7 +23,7 @@ describe('Suite de pruebas auth', () => {
         chai.request(app)
             .get('/teams')
             .end((err, res) => {
-                chai.assert.equal(res.statusCode, 401);
+                chai.assert.equal(res.statusCode, 401); //Miramos el codigo del status es igual a 401
                 done();
             });
     });
@@ -37,11 +37,11 @@ describe('Suite de pruebas auth', () => {
                 done();
             });
     });
-
+    //DEVOLVEMOS 200 cuando el jwt es valido, es decir, tenemos la llave  
     it('should return 200 and token for succesful login', (done) => {
         chai.request(app)
             .post('/auth/login')
-            .set('content-type', 'application/json')
+            .set('content-type', 'application/json') //Enviamos el header 
             .send({user: 'bettatech', password: '1234'})
             .end((err, res) => {
                 //Expect valid login
@@ -52,14 +52,14 @@ describe('Suite de pruebas auth', () => {
 
     it('should return 200 when jwt is valid', (done) => {
         chai.request(app)
-            .post('/auth/login')
+            .post('/auth/login') //llamos a login que nos devolvera el token que nos devuelve el usuario
             .set('content-type', 'application/json')
             .send({user: 'mastermind', password: '4321'})
             .end((err, res) => {
                 //Expect valid login
                 chai.assert.equal(res.statusCode, 200);
                 chai.request(app)
-                    .get('/teams')
+                    .get('/teams') //Aqui llamos a team con el Authorization, y con el token valido por lo tanto deberia ser valido 
                     .set('Authorization', `JWT ${res.body.token}`)
                     .end((err, res) => {
                         chai.assert.equal(res.statusCode, 200);
